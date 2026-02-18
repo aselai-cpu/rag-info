@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  prerequisites: string[];
+}
+
+const { prerequisites } = Astro.props;
+const pages = await getCollection('pages');
+
+const prereqPages = prerequisites
+  .map(slug => {
+    const page = pages.find(p => p.id === slug || p.id === `${slug}.mdx`);
+    return page ? { slug, title: page.data.title } : null;
+  })
+  .filter((p): p is { slug: string; title: string } => p !== null);
+---
+{prereqPages.length > 0 && (
+  <div class="prereq-bar">
+    <strong>Prerequisites:</strong>
+    {prereqPages.map((p, i) => (
+      <>
+        <a href={`/${p.slug}`}>{p.title}</a>
+        {i < prereqPages.length - 1 && ', '}
+      </>
+    ))}
+  </div>
+)}

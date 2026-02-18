@@ -1,0 +1,107 @@
+---
+title: "Ontology: Endurants & Perdurants"
+description: "Understanding the ontological constructs in knowledge graphs - what persists and what unfolds in time"
+section: "graph-rag"
+order: 2
+prerequisites: ["03-graph-rag/graphrag"]
+relatedPages: ["03-graph-rag/graphrag", "03-graph-rag/lightrag"]
+prev: "03-graph-rag/graphrag"
+next: "03-graph-rag/lightrag"
+tags: ["ontology", "endurants", "perdurants", "knowledge-graph"]
+---
+
+## The Two Kinds of Things in the World
+
+When we build knowledge graphs, we make implicit ontological commitments about what exists and how it is categorized. The most fundamental distinction in formal ontology divides everything into two categories: **endurants** (things that persist wholly at any moment in time) and **perdurants** (things that unfold over time, having temporal parts).
+
+Understanding this distinction is critical for building knowledge graphs that faithfully represent reality -- and for understanding why most graph-based RAG systems systematically lose certain types of information.
+
+## Endurants: What Persists
+
+Endurants are entities that are wholly present at every moment of their existence. At any given instant, the entire entity is "there." These include:
+
+- **Physical objects**: people, buildings, machines, documents
+- **Organizations**: companies, governments, teams
+- **Abstract concepts**: theories, policies, standards
+- **Qualities and properties**: color, weight, reputation
+
+A person, for example, is fully present right now. You do not have "part of a person" existing today and another part tomorrow. The person may change over time, but at each moment, the whole person exists.
+
+## Perdurants: What Unfolds
+
+Perdurants are entities that extend through time, having distinct temporal parts. They include:
+
+- **Events**: an acquisition, a product launch, an election
+- **Processes**: manufacturing, research, litigation
+- **States**: a recession, a partnership, a conflict
+
+An acquisition, for instance, is not wholly present at any single moment. It has phases -- negotiation, agreement, regulatory approval, completion. Each phase is a temporal part of the whole event.
+
+## Why Perdurants Are Systematically Overlooked
+
+Traditional knowledge graph extraction is overwhelmingly **entity-centric**. Most NLP pipelines prioritize noun phrases as entities and reduce verbs to mere edge labels. Consider the sentence:
+
+*"Acme Corp acquired Beta Inc in 2023 for $2B, pending regulatory approval."*
+
+### The Entity-Only Graph (Typical)
+
+```mermaid
+graph LR
+    A["Acme Corp\n(Organization)"] -->|"acquired"| B["Beta Inc\n(Organization)"]
+    A -->|"valued_at"| C["$2B"]
+
+    style A fill:#e6f3ff,stroke:#336
+    style B fill:#e6f3ff,stroke:#336
+    style C fill:#f0f0f0,stroke:#333
+```
+
+In this representation, the acquisition is flattened to a relationship label. Its properties -- the date, the price, the regulatory status, the consequences -- either dangle awkwardly from the edge or are lost entirely. You cannot ask "What acquisitions are pending regulatory approval?" because "pending regulatory approval" has nowhere to live in this schema.
+
+### The Entity + Event Graph (Ontologically Aware)
+
+```mermaid
+graph TD
+    A["Acme Corp\n(Organization)"] -->|"acquirer"| E["Acquisition of Beta\n(Event / Perdurant)"]
+    B["Beta Inc\n(Organization)"] -->|"acquired_entity"| E
+    E -->|"date"| D["2023"]
+    E -->|"value"| V["$2B"]
+    E -->|"status"| S["Pending Regulatory\nApproval"]
+    E -->|"phase_of"| P["Regulatory Review\n(Sub-Event)"]
+
+    style E fill:#ffe6e6,stroke:#633
+    style A fill:#e6f3ff,stroke:#336
+    style B fill:#e6f3ff,stroke:#336
+    style P fill:#ffe6e6,stroke:#633
+```
+
+Now the acquisition is a **first-class node** -- a perdurant with its own properties, sub-events, temporal boundaries, and causal connections. Queries about event properties, timelines, and causal chains become straightforward graph traversals.
+
+## What Gets Lost Without Perdurants
+
+When perdurants are flattened into edge labels, several categories of information are systematically destroyed:
+
+| Lost Information | Example |
+|---|---|
+| **Event properties** | The acquisition price, terms, conditions |
+| **Temporal structure** | Phases, duration, sequence of sub-events |
+| **Causal chains** | Event A caused Event B which led to State C |
+| **Event participation roles** | Who was the buyer, seller, regulator, advisor |
+| **Counterfactuals** | What would have happened if the acquisition failed |
+
+## Event Knowledge Graphs (EKGs)
+
+Event Knowledge Graphs treat events as first-class citizens alongside entities. In an EKG, both endurants and perdurants are nodes, connected by participation and temporal relationships. This design supports queries like:
+
+- "What events preceded the company's bankruptcy?"
+- "Which people participated in both the merger and the lawsuit?"
+- "What processes were disrupted by the regulation change?"
+
+EKGs are particularly valuable in domains with rich temporal dynamics: finance, geopolitics, healthcare, and legal analysis.
+
+## Implications for Graph-Based RAG
+
+If your knowledge graph only captures endurants, your RAG system will excel at answering entity-centric questions ("Who is the CEO of X?" or "What products does Y make?") but struggle with process-oriented or causal questions ("How did the financial crisis unfold?" or "What led to the policy change?").
+
+When designing a graph-based RAG system, the ontological choices you make during extraction directly determine the space of questions your system can answer.
+
+> **Path Not Taken:** Ignoring ontological distinctions entirely and treating all extracted elements as flat, undifferentiated entities is the default approach in most graph-based RAG systems today. This works adequately for static, entity-centric queries but creates a systematic blind spot for temporal, causal, and process-oriented reasoning -- precisely the kind of complex questions that motivate building a knowledge graph in the first place.

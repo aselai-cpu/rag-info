@@ -1,0 +1,179 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} | RAG Deep Dive`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="RAG Deep Dive" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={`${title} | RAG Deep Dive`} />
+    <meta name="twitter:description" content={description} />
+    <title>{title} | RAG Deep Dive</title>
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body>
+    <slot />
+    <div id="diagram-overlay" class="diagram-overlay" aria-hidden="true">
+      <div class="diagram-overlay-controls">
+        <button id="diagram-zoom-in" title="Zoom in">+</button>
+        <button id="diagram-zoom-reset" title="Reset zoom">1:1</button>
+        <button id="diagram-zoom-out" title="Zoom out">&minus;</button>
+        <button id="diagram-close" title="Close">&times;</button>
+      </div>
+      <div id="diagram-viewport" class="diagram-viewport">
+        <div id="diagram-content" class="diagram-content"></div>
+      </div>
+    </div>
+    <script>
+      import mermaid from 'mermaid';
+      mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+
+      function renderDiagrams() {
+        const codeBlocks = document.querySelectorAll('pre[data-language="mermaid"]');
+        codeBlocks.forEach((pre) => {
+          const container = document.createElement('div');
+          container.className = 'mermaid';
+          container.textContent = pre.textContent || '';
+          pre.replaceWith(container);
+        });
+        mermaid.run({ nodes: document.querySelectorAll('.mermaid') }).then(() => {
+          setupDiagramInteraction();
+        });
+      }
+
+      function setupDiagramInteraction() {
+        const overlay = document.getElementById('diagram-overlay')!;
+        const viewport = document.getElementById('diagram-viewport')!;
+        const content = document.getElementById('diagram-content')!;
+        const closeBtn = document.getElementById('diagram-close')!;
+        const zoomInBtn = document.getElementById('diagram-zoom-in')!;
+        const zoomOutBtn = document.getElementById('diagram-zoom-out')!;
+        const zoomResetBtn = document.getElementById('diagram-zoom-reset')!;
+
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+
+        function updateTransform() {
+          content.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function openDiagram(svg: string) {
+          content.innerHTML = svg;
+          scale = 1;
+          translateX = 0;
+          translateY = 0;
+          updateTransform();
+          overlay.classList.add('active');
+          overlay.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeDiagram() {
+          overlay.classList.remove('active');
+          overlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeDiagram);
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay || e.target === viewport) closeDiagram();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && overlay.classList.contains('active')) closeDiagram();
+        });
+
+        zoomInBtn.addEventListener('click', () => { scale = Math.min(scale * 1.3, 5); updateTransform(); });
+        zoomOutBtn.addEventListener('click', () => { scale = Math.max(scale / 1.3, 0.2); updateTransform(); });
+        zoomResetBtn.addEventListener('click', () => { scale = 1; translateX = 0; translateY = 0; updateTransform(); });
+
+        viewport.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          const delta = e.deltaY > 0 ? 0.9 : 1.1;
+          scale = Math.min(Math.max(scale * delta, 0.2), 5);
+          updateTransform();
+        }, { passive: false });
+
+        viewport.addEventListener('mousedown', (e) => {
+          if (e.button !== 0) return;
+          isDragging = true;
+          startX = e.clientX - translateX;
+          startY = e.clientY - translateY;
+          viewport.style.cursor = 'grabbing';
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          translateX = e.clientX - startX;
+          translateY = e.clientY - startY;
+          updateTransform();
+        });
+        window.addEventListener('mouseup', () => {
+          isDragging = false;
+          viewport.style.cursor = 'grab';
+        });
+
+        // Touch support
+        let lastTouchDist = 0;
+        viewport.addEventListener('touchstart', (e) => {
+          if (e.touches.length === 1) {
+            isDragging = true;
+            startX = e.touches[0].clientX - translateX;
+            startY = e.touches[0].clientY - translateY;
+          } else if (e.touches.length === 2) {
+            isDragging = false;
+            lastTouchDist = Math.hypot(
+              e.touches[0].clientX - e.touches[1].clientX,
+              e.touches[0].clientY - e.touches[1].clientY
+            );
+          }
+        }, { passive: true });
+        viewport.addEventListener('touchmove', (e) => {
+          if (e.touches.length === 1 && isDragging) {
+            translateX = e.touches[0].clientX - startX;
+            translateY = e.touches[0].clientY - startY;
+            updateTransform();
+          } else if (e.touches.length === 2) {
+            const dist = Math.hypot(
+              e.touches[0].clientX - e.touches[1].clientX,
+              e.touches[0].clientY - e.touches[1].clientY
+            );
+            if (lastTouchDist > 0) {
+              scale = Math.min(Math.max(scale * (dist / lastTouchDist), 0.2), 5);
+              updateTransform();
+            }
+            lastTouchDist = dist;
+          }
+        }, { passive: true });
+        viewport.addEventListener('touchend', () => { isDragging = false; lastTouchDist = 0; });
+
+        // Make all mermaid diagrams clickable
+        document.querySelectorAll('.mermaid').forEach((el) => {
+          el.classList.add('mermaid-clickable');
+          el.setAttribute('title', 'Click to expand');
+          el.addEventListener('click', () => {
+            openDiagram(el.innerHTML);
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderDiagrams);
+      } else {
+        renderDiagrams();
+      }
+    </script>
+  </body>
+</html>

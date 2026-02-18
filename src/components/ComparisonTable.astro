@@ -1,0 +1,66 @@
+---
+interface Props {
+  columns: string[];
+  rows: string[][] | Record<string, string>[];
+  filterColumn?: string;
+}
+
+const { columns, rows, filterColumn } = Astro.props;
+
+function getCellValue(row: string[] | Record<string, string>, col: string, colIndex: number): string {
+  if (Array.isArray(row)) return row[colIndex] || '';
+  return row[col] || '';
+}
+
+const filterColIndex = filterColumn ? columns.indexOf(filterColumn) : -1;
+
+const filterValues = filterColumn
+  ? [...new Set(rows.map(r => getCellValue(r, filterColumn, filterColIndex)).filter(Boolean))]
+  : [];
+---
+{filterValues.length > 0 && (
+  <div class="filter-controls">
+    <button class="filter-btn active" data-filter="all">All</button>
+    {filterValues.map(val => (
+      <button class="filter-btn" data-filter={val}>{val}</button>
+    ))}
+  </div>
+)}
+
+<table>
+  <thead>
+    <tr>
+      {columns.map(col => <th>{col}</th>)}
+    </tr>
+  </thead>
+  <tbody>
+    {rows.map(row => (
+      <tr data-category={filterColumn ? getCellValue(row, filterColumn, filterColIndex) : undefined}>
+        {columns.map((col, i) => <td>{getCellValue(row, col, i)}</td>)}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+{filterValues.length > 0 && (
+  <script>
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        const table = btn.closest('.filter-controls')?.nextElementSibling;
+        if (!table) return;
+
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        table.querySelectorAll('tbody tr').forEach(row => {
+          if (filter === 'all' || row.getAttribute('data-category') === filter) {
+            (row as HTMLElement).style.display = '';
+          } else {
+            (row as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+)}

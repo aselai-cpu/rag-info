@@ -1,0 +1,97 @@
+---
+title: "Why RAG?"
+description: "Understanding why Retrieval-Augmented Generation exists and the fundamental problem it solves"
+section: "foundation"
+order: 1
+prerequisites: []
+relatedPages: ["01-foundation/naive-rag", "02-retrieval-strategies/symmetry-problem"]
+prev: ""
+next: "01-foundation/naive-rag"
+tags: ["rag", "llm", "knowledge", "grounding"]
+---
+
+import CrossReference from '../../../components/CrossReference.astro';
+import PathNotTaken from '../../../components/PathNotTaken.astro';
+import DiagramBlock from '../../../components/DiagramBlock.astro';
+
+# Why RAG?
+
+## The Core Problem: LLMs and Knowledge
+
+Large Language Models are remarkable pattern-matching engines. They learn statistical relationships between tokens during training and can generate fluent, coherent text. But they have a fundamental limitation: **everything they "know" was frozen at training time**.
+
+This creates three concrete problems:
+
+1. **Staleness** — The model cannot know about events, papers, or data that appeared after its training cutoff.
+2. **Hallucination** — When the model lacks knowledge, it generates plausible-sounding but incorrect answers rather than admitting ignorance.
+3. **Opacity** — There is no way to trace a generated claim back to a specific source document.
+
+## First Principles: What Do We Actually Need?
+
+Before jumping to solutions, let's state the requirement clearly:
+
+> We need a system that can answer questions using **specific, verifiable, up-to-date knowledge** while leveraging the language understanding capabilities of LLMs.
+
+Breaking this down:
+- **Specific**: Answers grounded in actual documents, not statistical patterns
+- **Verifiable**: Every claim traceable to a source
+- **Up-to-date**: Reflects current information, not just training data
+- **Language understanding**: Natural language questions, natural language answers
+
+## The Two Obvious Approaches (And Why They Fall Short)
+
+<PathNotTaken title="Fine-tuning the model on new data" reason="Fine-tuning changes the model's weights to encode new knowledge, but it's expensive, slow, cannot be easily updated, and still cannot provide source citations. It changes what the model 'remembers' but doesn't solve the verification problem." />
+
+<PathNotTaken title="Stuffing everything into the prompt" reason="You could paste relevant documents into the context window, but context windows are finite (even large ones have limits), it's expensive per query, and you still need a way to select which documents to include — which is exactly the retrieval problem." />
+
+## The RAG Insight
+
+Retrieval-Augmented Generation combines two capabilities:
+
+1. **Retrieval** — Find relevant documents from a knowledge base
+2. **Generation** — Use the LLM to synthesize an answer from those documents
+
+<DiagramBlock caption="The RAG pattern: retrieve first, then generate" label="RAG basic flow diagram">
+```mermaid
+flowchart LR
+    Q[User Query] --> R[Retriever]
+    R --> D1[Doc 1]
+    R --> D2[Doc 2]
+    R --> D3[Doc 3]
+    D1 --> G[Generator / LLM]
+    D2 --> G
+    D3 --> G
+    Q --> G
+    G --> A[Grounded Answer]
+```
+</DiagramBlock>
+
+The key insight is **separation of concerns**:
+- The retriever handles **finding** relevant information
+- The generator handles **synthesizing** a coherent answer
+- The knowledge base can be **updated independently** of the model
+
+## Why This Matters
+
+RAG transforms LLMs from closed systems (limited to training data) into open systems (connected to living knowledge bases). This is not merely an optimization — it's a fundamental architectural shift.
+
+| Without RAG | With RAG |
+|------------|----------|
+| Knowledge frozen at training time | Knowledge updated by updating the index |
+| No source attribution | Every answer linked to source documents |
+| Hallucination indistinguishable from knowledge | Retrieval failures are detectable |
+| Retraining required for new knowledge | Re-index documents instead |
+
+## Assumptions We're Making
+
+Before proceeding, let's be explicit about our assumptions:
+
+1. **The knowledge exists in documents** — RAG assumes you have a corpus of text that contains the answers.
+2. **Relevance is computable** — We assume that mathematical similarity (e.g., vector distance) correlates with semantic relevance.
+3. **The LLM can synthesize** — Given the right context, the LLM can produce an accurate answer.
+
+Each of these assumptions will break down in interesting ways as we explore deeper. The <CrossReference slug="01-foundation/problem-tree" /> maps exactly where these assumptions fail and what strategies address each failure.
+
+## What's Next
+
+Now that we understand *why* RAG exists, let's look at the simplest possible implementation: <CrossReference slug="01-foundation/naive-rag" />. Understanding the naive approach first gives us a baseline against which all improvements can be measured.

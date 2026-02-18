@@ -1,0 +1,163 @@
+---
+import Layout from '../components/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const pages = await getCollection('pages');
+const sections = [
+  { id: 'foundation', title: 'Foundation', description: 'Why RAG exists and where it breaks down' },
+  { id: 'retrieval-strategies', title: 'Retrieval Strategies', description: 'Techniques to fix query-document mismatch' },
+  { id: 'graph-rag', title: 'Graph-Based RAG', description: 'Adding structural understanding to retrieval' },
+  { id: 'synthesis', title: 'Synthesis', description: 'Putting it all together and choosing your approach' },
+];
+---
+<Layout title="RAG Deep Dive" description="An exploratory deep dive into Retrieval-Augmented Generation from first principles">
+  <main class="landing">
+    <header class="landing-header">
+      <h1>RAG Deep Dive</h1>
+      <p class="landing-subtitle">An exploratory journey through Retrieval-Augmented Generation — from first principles to cutting-edge techniques</p>
+      <a href="/01-foundation/why-rag" class="start-button">Start with: Why RAG? →</a>
+    </header>
+
+    <section class="landing-sections">
+      <h2>What You'll Explore</h2>
+      <div class="section-grid">
+        {sections.map((section, i) => {
+          const sectionPages = pages
+            .filter(p => p.data.section === section.id)
+            .sort((a, b) => a.data.order - b.data.order);
+          return (
+            <div class="section-card">
+              <h3><span class="section-number">{String(i + 1).padStart(2, '0')}</span> {section.title}</h3>
+              <p>{section.description}</p>
+              <ul>
+                {sectionPages.map(p => (
+                  <li><a href={`/${p.id.replace(/\.mdx?$/, '')}`}>{p.data.title}</a></li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="landing-approach">
+      <h2>How This Site Works</h2>
+      <div class="approach-grid">
+        <div class="approach-item">
+          <strong>Progressive Build-Up</strong>
+          <p>Each page builds on the previous one. Start from "Why RAG?" and follow the linear path, or jump to any topic using the sidebar.</p>
+        </div>
+        <div class="approach-item">
+          <strong>First Principles</strong>
+          <p>Every technique is explained by the problem it solves. No technique is presented without its motivation.</p>
+        </div>
+        <div class="approach-item">
+          <strong>Paths Not Taken</strong>
+          <p>Understanding why certain approaches don't work is as valuable as understanding what does. Look for the "Path Not Taken" callouts.</p>
+        </div>
+        <div class="approach-item">
+          <strong>Cross-References</strong>
+          <p>Concepts connect across pages. Related topics and prerequisites help you build a complete mental model.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-start">
+      <h2>Ready to Begin?</h2>
+      <p>The journey starts with a simple question: <a href="/01-foundation/why-rag">Why do we need RAG at all?</a></p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .landing {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .landing-header {
+    text-align: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .landing-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .landing-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+  .start-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .start-button:hover {
+    opacity: 0.9;
+  }
+  .landing-sections, .landing-approach, .landing-start {
+    margin-bottom: 3rem;
+  }
+  .landing-sections h2, .landing-approach h2, .landing-start h2 {
+    margin-bottom: 1rem;
+  }
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .section-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .section-card h3 {
+    margin-bottom: 0.5rem;
+  }
+  .section-number {
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .section-card ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.75rem;
+  }
+  .section-card li {
+    padding: 0.25rem 0;
+  }
+  .section-card li a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  .section-card li a:hover {
+    text-decoration: underline;
+  }
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  .approach-item {
+    padding: 1rem;
+    border-left: 3px solid var(--primary);
+    background: var(--bg-secondary, #f9f9f9);
+  }
+  .approach-item strong {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .landing-start {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
