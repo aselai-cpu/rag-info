@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map(page => ({
+    params: { slug: page.id.replace(/\.mdx?$/, '') },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await page.render();
+---
+<PageLayout
+  title={page.data.title}
+  description={page.data.description}
+  section={page.data.section}
+  order={page.data.order}
+  prerequisites={page.data.prerequisites}
+  relatedPages={page.data.relatedPages}
+  prev={page.data.prev}
+  next={page.data.next}
+  tags={page.data.tags}
+>
+  <Content />
+</PageLayout>

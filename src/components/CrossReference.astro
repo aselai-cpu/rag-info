@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  slug: string;
+  label?: string;
+}
+
+const { slug, label } = Astro.props;
+
+const pages = await getCollection('pages');
+const target = pages.find(p => p.id === slug || p.id === `${slug}.mdx`);
+const displayLabel = label || target?.data.title || slug;
+---
+<a href={`/${slug}`} class="cross-ref">{displayLabel}</a>

@@ -1,0 +1,12 @@
+---
+interface Props {
+  title: string;
+  reason: string;
+}
+
+const { title, reason } = Astro.props;
+---
+<aside class="path-not-taken">
+  <div class="path-not-taken-title">Path Not Taken: {title}</div>
+  <p>{reason}</p>
+</aside>

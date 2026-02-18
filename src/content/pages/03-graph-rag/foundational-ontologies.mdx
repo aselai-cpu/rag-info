@@ -1,0 +1,202 @@
+---
+title: "Foundational Ontologies for RAG"
+description: "Comparing DOLCE, BFO, and SUMO as foundations for modeling RAG systems ontologically"
+section: "graph-rag"
+order: 8
+prerequisites: ["03-graph-rag/rag-ontology-map"]
+relatedPages: ["03-graph-rag/ontology", "03-graph-rag/competency-questions"]
+prev: "03-graph-rag/rag-ontology-map"
+next: "04-synthesis/progressive-map"
+tags: ["ontology", "dolce", "bfo", "sumo", "foundational"]
+---
+
+import CrossReference from '../../../components/CrossReference.astro';
+import PathNotTaken from '../../../components/PathNotTaken.astro';
+import DiagramBlock from '../../../components/DiagramBlock.astro';
+import ComparisonTable from '../../../components/ComparisonTable.astro';
+
+# Foundational Ontologies for RAG
+
+## Why Anchor to a Foundation?
+
+The <CrossReference slug="03-graph-rag/rag-ontology-map" /> maps RAG concepts to DOLCE categories. But DOLCE is not the only foundational ontology. **BFO** and **SUMO** offer different categorization schemes — and the choice affects how you model, reason about, and extend the RAG ontology.
+
+A foundational ontology provides:
+- **Shared vocabulary** for cross-domain interoperability
+- **Formal constraints** that prevent modeling errors
+- **Philosophical grounding** that distinguishes types from roles, things from processes
+
+## The Three Major Foundational Ontologies
+
+### DOLCE (Descriptive Ontology for Linguistic and Cognitive Engineering)
+
+Developed at the Laboratory for Applied Ontology (LOA-CNR, Italy). DOLCE is **cognitively oriented** — it models the categories underlying human language and thought.
+
+<DiagramBlock caption="DOLCE top-level categories relevant to RAG" label="DOLCE hierarchy">
+```mermaid
+flowchart TD
+    P["Particular"] --> E["Endurant"]
+    P --> PD["Perdurant"]
+    P --> Q["Quality"]
+    P --> A["Abstract"]
+
+    E --> PE["Physical Endurant"]
+    E --> NPE["Non-Physical Endurant"]
+
+    NPE --> NPO["Non-Physical Object"]
+    NPO --> Concept["Concept"]
+    NPO --> RoleD["Role"]
+    NPO --> Art["Artefact"]
+
+    PD --> Stative["Stative"]
+    PD --> Eventive["Eventive"]
+
+    Stative --> State["State"]
+    Stative --> Process["Process"]
+
+    Eventive --> Achievement["Achievement"]
+    Eventive --> Accomplishment["Accomplishment"]
+```
+</DiagramBlock>
+
+**Key strengths for RAG**:
+- Rich **non-physical endurant** hierarchy — documents and chunks are information artefacts, naturally modeled as non-physical objects
+- **Role** as a first-class category — Retriever, Generator, and Indexer are roles played by components, not essential types
+- Four-way **process taxonomy** (State, Process, Achievement, Accomplishment) — captures the difference between ongoing retrieval and completed query sessions
+
+### BFO (Basic Formal Ontology)
+
+Developed by Barry Smith. BFO is **realist and minimal** (only 34 terms). It's an ISO standard (ISO/IEC 21838-2) and the backbone of the OBO Foundry biomedical ontologies.
+
+<DiagramBlock caption="BFO top-level categories relevant to RAG" label="BFO hierarchy">
+```mermaid
+flowchart TD
+    E["Entity"] --> C["Continuant"]
+    E --> O["Occurrent"]
+
+    C --> IC["Independent Continuant"]
+    C --> SDC["Specifically Dependent Continuant"]
+
+    IC --> ME["Material Entity"]
+    IC --> IE["Immaterial Entity"]
+
+    SDC --> Qual["Quality"]
+    SDC --> RE["Realizable Entity"]
+
+    RE --> RoleBFO["Role"]
+    RE --> Disp["Disposition"]
+    RE --> Func["Function"]
+
+    O --> Proc["Process"]
+    O --> PB["Process Boundary"]
+    O --> TR["Temporal Region"]
+```
+</DiagramBlock>
+
+**Key strengths for RAG**:
+- **Realizable Entity** hierarchy distinguishes Role, Disposition, and Function — a Retriever's *function* (what it's designed for), *disposition* (capacity to retrieve), and *role* (context-dependent status) are all distinct concepts
+- Minimal and rigorous — forces you to justify every category
+- ISO standard with strong tooling ecosystem
+
+### SUMO (Suggested Upper Merged Ontology)
+
+Developed by Adam Pease et al. SUMO is **larger and more expressive** than DOLCE or BFO, with rich axioms in first-order logic and links to WordNet.
+
+**Key strengths for RAG**:
+- **InformationBearingObject** hierarchy cleanly separates content (information) from medium (storage)
+- **IntentionalProcess** captures that RAG generation is purposeful, not random
+- **Communication** models the query-response pattern as a communicative act
+
+## Head-to-Head Comparison
+
+<ComparisonTable
+  columns={["Criterion", "DOLCE", "BFO", "SUMO"]}
+  filterColumn="Criterion"
+  rows={[
+    ["Information objects", "Excellent (non-physical artefact)", "Good (generically dependent continuant)", "Excellent (InformationBearingObject)"],
+    ["Process taxonomy", "Excellent (4 types: state/process/achievement/accomplishment)", "Good (Process + ProcessBoundary)", "Good (Process hierarchy)"],
+    ["Role modeling", "Excellent (Role as non-physical endurant)", "Excellent (Role as realizable entity)", "Moderate (less formal treatment)"],
+    ["Formalism", "OWL-DL, FOL", "OWL-DL, ISO standard", "FOL (Sigma KIF)"],
+    ["Size", "Medium (~100 categories)", "Minimal (34 terms)", "Large (25,000+ terms)"],
+    ["Primary domain", "Language, cognition, social", "Biomedical, scientific", "General-purpose"],
+    ["Tooling/adoption", "Moderate", "High (OBO Foundry)", "Moderate"],
+    ["Cognitive alignment", "Highest", "Low (strict realist)", "Moderate"],
+  ]}
+/>
+
+## Same Concept, Different Categorizations
+
+How does "Retrieval" look in each framework?
+
+<DiagramBlock caption="Retrieval mapped across three foundational ontologies" label="Retrieval across ontologies">
+```mermaid
+flowchart LR
+    subgraph DOLCE
+        direction TB
+        D1["Particular"] --> D2["Perdurant"]
+        D2 --> D3["Stative"]
+        D3 --> D4["Process"]
+        D4 --> D5["Retrieval"]
+    end
+
+    subgraph BFO
+        direction TB
+        B1["Entity"] --> B2["Occurrent"]
+        B2 --> B3["Process"]
+        B3 --> B4["Retrieval"]
+    end
+
+    subgraph SUMO
+        direction TB
+        S1["Entity"] --> S2["Process"]
+        S2 --> S3["IntentionalProcess"]
+        S3 --> S4["Retrieval"]
+    end
+```
+</DiagramBlock>
+
+| Aspect | DOLCE | BFO | SUMO |
+|--------|-------|-----|------|
+| Category for Retrieval | Stative Process | Occurrent Process | IntentionalProcess |
+| What it captures | Ongoing, cumulative activity | Something with temporal parts | Purposeful computational action |
+| Distinction from QuerySession | Process vs Accomplishment (cumulative vs telic) | Process vs Process (less fine-grained) | Process vs Process (distinguished by axioms) |
+
+DOLCE's four-way perdurant distinction is the most expressive here — it captures that Retrieval is cumulative (two retrievals composed = still retrieval) while QuerySession is an accomplishment (it has a natural endpoint).
+
+## How "Document" Maps Differently
+
+| Aspect | DOLCE | BFO | SUMO |
+|--------|-------|-----|------|
+| Category | Non-physical Artefact | Generically Dependent Continuant | InformationBearingObject |
+| Key insight | A designed information object | Exists by virtue of being concretized in a medium | Content separable from medium |
+| Implication | Focus on document as cultural/social artefact | Focus on document's dependence on physical storage | Focus on information content vs physical carrier |
+
+## Which Foundation for RAG?
+
+<PathNotTaken title="Building a RAG ontology without any foundational ontology" reason="Without a foundation, you lack formal constraints on your categories. You might accidentally make 'RetrievedChunk' a subclass of 'DocumentChunk' (violating rigidity constraints), or model 'Retrieval' as an entity instead of a process. Foundational ontologies prevent these structural errors." />
+
+**Our recommendation: DOLCE** for RAG ontology design, because:
+
+1. **Information objects are first-class citizens** — documents, chunks, and embeddings are non-physical artefacts, which DOLCE models natively
+2. **Rich process taxonomy** — the State/Process/Achievement/Accomplishment distinction maps perfectly to RAG's mix of ongoing processes and discrete events
+3. **Role as a formal category** — Retriever, Generator, Indexer as roles (not types) is naturally expressed in DOLCE
+4. **Cognitive alignment** — since RAG is ultimately about human-AI interaction, DOLCE's cognitive orientation is appropriate
+
+**When to consider BFO instead**: If your RAG system is part of a scientific data pipeline (e.g., biomedical literature retrieval) and needs to interoperate with OBO Foundry ontologies.
+
+**When to consider SUMO instead**: If you need extremely detailed axioms for automated reasoning, or if your RAG system processes multi-modal content where the content/medium distinction matters.
+
+## Bringing It All Together
+
+The journey through this section:
+
+1. <CrossReference slug="03-graph-rag/ontology" /> introduced endurants and perdurants
+2. <CrossReference slug="03-graph-rag/competency-questions" /> showed how to ask the right questions
+3. <CrossReference slug="03-graph-rag/rag-ontology-map" /> derived the complete RAG ontology from those questions
+4. This page compared which foundational ontology best anchors that derivation
+
+The ontology is not just an academic exercise — it provides the formal structure that <CrossReference slug="03-graph-rag/graphrag" /> uses when extracting entities and relationships from documents.
+
+## What's Next
+
+With the full ontological picture in hand, move to <CrossReference slug="04-synthesis/progressive-map" /> for a visual synthesis of everything we've covered — from naive RAG through graph-based approaches to ontological engineering.

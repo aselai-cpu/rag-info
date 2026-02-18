@@ -1,50 +1,108 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+===================
+- Version change: N/A → 1.0.0 (initial ratification)
+- Added principles:
+  - I. Test-First (NEW)
+  - II. Simplicity & YAGNI (NEW)
+  - III. Defensive Engineering (NEW)
+- Added sections:
+  - Development Workflow
+  - Quality Gates
+  - Governance
+- Removed sections: None (initial version)
+- Templates requiring updates:
+  - .specify/templates/plan-template.md — ✅ no update needed
+    (Constitution Check section is generic; filled at plan time)
+  - .specify/templates/spec-template.md — ✅ no update needed
+    (spec template is principle-agnostic)
+  - .specify/templates/tasks-template.md — ✅ no update needed
+    (task phases align with test-first and story-driven approach)
+- Follow-up TODOs: None
+-->
+
+# 102 Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Test-First (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+- All features MUST have tests written before implementation code.
+- The Red-Green-Refactor cycle MUST be followed: write a failing
+  test, write the minimum code to pass, then refactor.
+- No implementation PR MUST be merged without corresponding test
+  coverage for the changed behavior.
+- Tests MUST be independently runnable and deterministic.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: Tests written after implementation tend to confirm
+what was built rather than what was intended. Test-first ensures
+requirements drive the code, not the other way around.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Simplicity & YAGNI
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+- Every feature MUST start with the simplest viable implementation.
+- Abstractions MUST NOT be introduced until at least two concrete
+  use cases exist (Rule of Two).
+- Speculative features, premature optimization, and unused
+  configurability MUST be avoided.
+- Three similar lines of code are preferable to a premature
+  abstraction.
+- Complexity MUST be justified in writing when it exceeds the
+  minimum needed for the current requirement.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: Unnecessary complexity is the primary source of
+bugs, maintenance burden, and onboarding friction. Building only
+what is needed keeps the codebase lean and comprehensible.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Defensive Engineering
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- All user input and external API data MUST be validated at system
+  boundaries before processing.
+- Strict typing MUST be enforced; implicit `any` types and type
+  assertion escape hatches MUST NOT be used without documented
+  justification.
+- OWASP Top 10 vulnerabilities (XSS, injection, CSRF, etc.) MUST
+  be actively prevented in all user-facing code paths.
+- Dependencies MUST be kept to the minimum necessary and audited
+  for known vulnerabilities before adoption.
+- Secrets and credentials MUST NOT appear in source code or version
+  control.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: Combining type safety with security-first practices
+catches errors at compile time and prevents exploitable flaws at
+runtime, reducing both bug density and attack surface.
+
+## Development Workflow
+
+- Feature work MUST follow a branch-based workflow with code review
+  before merging to the main branch.
+- Each user story MUST be independently implementable, testable,
+  and deployable.
+- Commits MUST be atomic and descriptive, covering one logical
+  change per commit.
+- Linting and formatting checks MUST pass before code review.
+
+## Quality Gates
+
+- All tests MUST pass in CI before a PR can be merged.
+- Type checking MUST report zero errors before a PR can be merged.
+- New code MUST NOT introduce linting warnings or errors.
+- Security-sensitive changes (authentication, authorization, input
+  handling) MUST receive explicit review from at least one other
+  contributor.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- This constitution supersedes all other development practices
+  where conflicts arise.
+- Amendments require: (1) a written proposal describing the change,
+  (2) review and approval, and (3) a migration plan if existing
+  code is affected.
+- Version numbering follows semantic versioning:
+  - MAJOR: backward-incompatible principle removals or redefinitions
+  - MINOR: new principle/section additions or material expansions
+  - PATCH: clarifications, wording fixes, non-semantic refinements
+- Compliance with these principles MUST be verified during code
+  review. Reviewers MUST flag violations.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-02-17 | **Last Amended**: 2026-02-17

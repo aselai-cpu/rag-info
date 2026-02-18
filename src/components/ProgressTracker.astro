@@ -1,0 +1,17 @@
+---
+interface Props {
+  currentIndex: number;
+  totalPages: number;
+  sectionName: string;
+}
+
+const { currentIndex, totalPages, sectionName } = Astro.props;
+const percentage = Math.round(((currentIndex + 1) / totalPages) * 100);
+---
+<div class="progress-tracker">
+  <span>{sectionName}</span>
+  <div class="progress-bar">
+    <div class="progress-bar-fill" style={`width: ${percentage}%`}></div>
+  </div>
+  <span>Page {currentIndex + 1} of {totalPages}</span>
+</div>

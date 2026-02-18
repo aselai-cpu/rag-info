@@ -1,0 +1,99 @@
+---
+import Layout from '../components/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import PrerequisiteBar from '../components/PrerequisiteBar.astro';
+import ProgressTracker from '../components/ProgressTracker.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title: string;
+  description: string;
+  section: string;
+  order: number;
+  prerequisites?: string[];
+  relatedPages?: string[];
+  prev?: string;
+  next?: string;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  section,
+  order,
+  prerequisites = [],
+  relatedPages = [],
+  prev,
+  next,
+} = Astro.props;
+
+const stripExt = (id: string) => id.replace(/\.mdx?$/, '');
+const currentSlug = Astro.url.pathname.replace(/^\//, '').replace(/\/$/, '');
+const allPages = await getCollection('pages');
+const totalPages = allPages.length;
+const allSorted = allPages.sort((a, b) => {
+  const sectionOrder = ['foundation', 'retrieval-strategies', 'graph-rag', 'synthesis'];
+  const sa = sectionOrder.indexOf(a.data.section);
+  const sb = sectionOrder.indexOf(b.data.section);
+  if (sa !== sb) return sa - sb;
+  return a.data.order - b.data.order;
+});
+const currentIndex = allSorted.findIndex(p => stripExt(p.id) === currentSlug);
+
+const sectionLabels: Record<string, string> = {
+  'foundation': 'Foundation',
+  'retrieval-strategies': 'Retrieval Strategies',
+  'graph-rag': 'Graph-Based RAG',
+  'synthesis': 'Synthesis',
+};
+
+const prevPage = prev ? allPages.find(p => stripExt(p.id) === prev) : undefined;
+const nextPage = next ? allPages.find(p => stripExt(p.id) === next) : undefined;
+
+const relatedPageData = relatedPages
+  .map(slug => allPages.find(p => stripExt(p.id) === slug))
+  .filter((p): p is NonNullable<typeof p> => p !== undefined);
+---
+<Layout title={title} description={description}>
+  <div class="site-layout">
+    <Navigation currentSlug={currentSlug} currentSection={section} />
+    <main class="site-content">
+      <ProgressTracker
+        currentIndex={currentIndex >= 0 ? currentIndex : 0}
+        totalPages={totalPages}
+        sectionName={sectionLabels[section] || section}
+      />
+      <PrerequisiteBar prerequisites={prerequisites} />
+      <h1>{title}</h1>
+      <slot />
+
+      {relatedPageData.length > 0 && (
+        <aside style="margin-top: 2rem; padding: 1rem; background: var(--color-primary-light); border-radius: 6px;">
+          <strong>Related Topics:</strong>
+          {relatedPageData.map((p, i) => (
+            <>
+              <a href={`/${stripExt(p.id)}`}>{p.data.title}</a>
+              {i < relatedPageData.length - 1 && ' · '}
+            </>
+          ))}
+        </aside>
+      )}
+
+      <nav class="page-nav">
+        {prevPage ? (
+          <a href={`/${stripExt(prevPage.id)}`}>
+            <span class="page-nav-label">← Previous</span>
+            <span>{prevPage.data.title}</span>
+          </a>
+        ) : <span />}
+        {nextPage ? (
+          <a href={`/${stripExt(nextPage.id)}`} class="page-nav-next">
+            <span class="page-nav-label">Next →</span>
+            <span>{nextPage.data.title}</span>
+          </a>
+        ) : <span />}
+      </nav>
+    </main>
+  </div>
+</Layout>

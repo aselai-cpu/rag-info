@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug: string;
+  currentSection: string;
+}
+
+const { currentSlug, currentSection } = Astro.props;
+const allPages = await getCollection('pages');
+
+const sections = [
+  { id: 'foundation', label: 'Foundation', dir: '01-foundation' },
+  { id: 'retrieval-strategies', label: 'Retrieval Strategies', dir: '02-retrieval-strategies' },
+  { id: 'graph-rag', label: 'Graph-Based RAG', dir: '03-graph-rag' },
+  { id: 'synthesis', label: 'Synthesis', dir: '04-synthesis' },
+];
+
+const groupedPages = sections.map(section => ({
+  ...section,
+  pages: allPages
+    .filter(p => p.data.section === section.id)
+    .sort((a, b) => a.data.order - b.data.order),
+}));
+---
+<nav class="site-sidebar" aria-label="Site navigation">
+  <div style="padding: 0.75rem 1.25rem; margin-bottom: 0.5rem;">
+    <a href="/" style="font-weight: 700; font-size: 1.1rem; color: var(--color-text);">RAG Deep Dive</a>
+  </div>
+  {groupedPages.map(section => (
+    <details class="nav-section" open={section.id === currentSection}>
+      <summary class="nav-section-title">{section.label}</summary>
+      {section.pages.map(page => (
+        <a
+          href={`/${page.id.replace(/\.mdx?$/, '')}`}
+          class:list={['nav-link', { active: page.id.replace(/\.mdx?$/, '') === currentSlug }]}
+        >
+          {page.data.title}
+        </a>
+      ))}
+    </details>
+  ))}
+</nav>
