@@ -52,15 +52,15 @@ In neuroscience, pattern separation is the process of creating distinct, orthogo
 
 ```mermaid
 flowchart TD
-    D["Document Corpus"] --> LLM["LLM\n(Open IE Extraction)"]
-    LLM --> T["Entity Triples\n(subject, predicate, object)"]
-    T --> KG["Knowledge Graph\nConstruction"]
-    KG --> IDX["Node Embeddings +\nPassage Links"]
+    D["Document Corpus"] --> LLM["LLM<br/>(Open IE Extraction)"]
+    LLM --> T["Entity Triples<br/>(subject, predicate, object)"]
+    T --> KG["Knowledge Graph<br/>Construction"]
+    KG --> IDX["Node Embeddings +<br/>Passage Links"]
 
     subgraph "Pattern Separation"
-        P1["Passage A: 'Einstein developed\nthe theory of relativity'"] --> N1["Einstein"]
+        P1["Passage A: 'Einstein developed<br/>the theory of relativity'"] --> N1["Einstein"]
         P1 --> N2["Theory of Relativity"]
-        P2["Passage B: 'Einstein won the\nNobel Prize in 1921'"] --> N1
+        P2["Passage B: 'Einstein won the<br/>Nobel Prize in 1921'"] --> N1
         P2 --> N3["Nobel Prize"]
         P2 --> N4["1921"]
     end
@@ -77,12 +77,12 @@ Pattern completion is the inverse of separation: given a partial cue, reconstruc
 
 ```mermaid
 flowchart LR
-    Q["Query"] --> EXT["Extract Query\nEntities"]
-    EXT --> MATCH["Match to KG Nodes\n(Seed Nodes)"]
-    MATCH --> PPR["Run Personalized\nPageRank"]
-    PPR --> RANK["Rank All Nodes\nby PPR Score"]
-    RANK --> TOP["Select Top-K\nNodes"]
-    TOP --> PASS["Retrieve Linked\nPassages"]
+    Q["Query"] --> EXT["Extract Query<br/>Entities"]
+    EXT --> MATCH["Match to KG Nodes<br/>(Seed Nodes)"]
+    MATCH --> PPR["Run Personalized<br/>PageRank"]
+    PPR --> RANK["Rank All Nodes<br/>by PPR Score"]
+    RANK --> TOP["Select Top-K<br/>Nodes"]
+    TOP --> PASS["Retrieve Linked<br/>Passages"]
     PASS --> GEN["LLM Generation"]
 
     style PPR fill:#ffe6e6,stroke:#633
@@ -142,16 +142,16 @@ In standard PageRank, every node starts with equal probability (1/N). In PPR, al
 flowchart TD
     subgraph "Standard PageRank"
         direction LR
-        A1["Node A\nStart: 1/N"] ---|"equal"| B1["Node B\nStart: 1/N"]
-        B1 ---|"equal"| C1["Node C\nStart: 1/N"]
-        C1 ---|"equal"| D1["Node D\nStart: 1/N"]
+        A1["Node A<br/>Start: 1/N"] ---|"equal"| B1["Node B<br/>Start: 1/N"]
+        B1 ---|"equal"| C1["Node C<br/>Start: 1/N"]
+        C1 ---|"equal"| D1["Node D<br/>Start: 1/N"]
     end
 
     subgraph "Personalized PageRank"
         direction LR
-        A2["Seed Node A\nStart: 0.5"] -->|"propagate"| B2["Node B\nStart: 0"]
-        A2S["Seed Node C\nStart: 0.5"] -->|"propagate"| B2
-        B2 -->|"propagate"| D2["Node D\nStart: 0"]
+        A2["Seed Node A<br/>Start: 0.5"] -->|"propagate"| B2["Node B<br/>Start: 0"]
+        A2S["Seed Node C<br/>Start: 0.5"] -->|"propagate"| B2
+        B2 -->|"propagate"| D2["Node D<br/>Start: 0"]
     end
 
     style A2 fill:#ffe6e6,stroke:#633
@@ -194,16 +194,16 @@ Both entities exist as nodes in the knowledge graph. These become our seed nodes
 
 ```mermaid
 graph TD
-    E["Einstein\n(Seed: 0.5)"] -->|"developed"| QM["Quantum\nMechanics"]
-    E -->|"developed"| REL["Theory of\nRelativity"]
-    E -->|"worked_at"| IAS["Institute for\nAdvanced Study"]
-    QM -->|"foundation_of"| QC["Quantum\nComputing\n(Seed: 0.5)"]
-    QM -->|"includes"| ENT["Quantum\nEntanglement"]
+    E["Einstein<br/>(Seed: 0.5)"] -->|"developed"| QM["Quantum<br/>Mechanics"]
+    E -->|"developed"| REL["Theory of<br/>Relativity"]
+    E -->|"worked_at"| IAS["Institute for<br/>Advanced Study"]
+    QM -->|"foundation_of"| QC["Quantum<br/>Computing<br/>(Seed: 0.5)"]
+    QM -->|"includes"| ENT["Quantum<br/>Entanglement"]
     ENT -->|"enables"| QC
-    QC -->|"uses"| QG["Quantum\nGates"]
+    QC -->|"uses"| QG["Quantum<br/>Gates"]
     QC -->|"pioneered_by"| FEY["Feynman"]
     FEY -->|"studied_at"| IAS
-    REL -->|"relates_to"| GPS["GPS\nSatellites"]
+    REL -->|"relates_to"| GPS["GPS<br/>Satellites"]
 
     style E fill:#ff6b6b,stroke:#333,color:#fff
     style QC fill:#ff6b6b,stroke:#333,color:#fff

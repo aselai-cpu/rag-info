@@ -70,7 +70,7 @@ Traditional knowledge graph extraction is overwhelmingly **entity-centric**. Mos
 
 ```mermaid
 graph LR
-    A["Acme Corp\n(Organization)"] -->|"acquired"| B["Beta Inc\n(Organization)"]
+    A["Acme Corp<br/>(Organization)"] -->|"acquired"| B["Beta Inc<br/>(Organization)"]
     A -->|"valued_at"| C["$2B"]
 
     style A fill:#e6f3ff,stroke:#336
@@ -84,12 +84,12 @@ In this representation, the acquisition is flattened to a relationship label. It
 
 ```mermaid
 graph TD
-    A["Acme Corp\n(Organization)"] -->|"acquirer"| E["Acquisition of Beta\n(Event / Perdurant)"]
-    B["Beta Inc\n(Organization)"] -->|"acquired_entity"| E
+    A["Acme Corp<br/>(Organization)"] -->|"acquirer"| E["Acquisition of Beta<br/>(Event / Perdurant)"]
+    B["Beta Inc<br/>(Organization)"] -->|"acquired_entity"| E
     E -->|"date"| D["2023"]
     E -->|"value"| V["$2B"]
-    E -->|"status"| S["Pending Regulatory\nApproval"]
-    E -->|"phase_of"| P["Regulatory Review\n(Sub-Event)"]
+    E -->|"status"| S["Pending Regulatory<br/>Approval"]
+    E -->|"phase_of"| P["Regulatory Review<br/>(Sub-Event)"]
 
     style E fill:#ffe6e6,stroke:#633
     style A fill:#e6f3ff,stroke:#336

@@ -39,10 +39,10 @@ The indexing pipeline transforms raw text into a layered knowledge structure thr
 ```mermaid
 flowchart TD
     A["Raw Documents"] --> B["Text Unitization"]
-    B --> C["Entity & Relationship\nExtraction (LLM)"]
-    C --> D["Knowledge Graph\nConstruction"]
-    D --> E["Hierarchical Leiden\nCommunity Detection"]
-    E --> F["Community\nSummarization (LLM)"]
+    B --> C["Entity & Relationship<br/>Extraction (LLM)"]
+    C --> D["Knowledge Graph<br/>Construction"]
+    D --> E["Hierarchical Leiden<br/>Community Detection"]
+    E --> F["Community<br/>Summarization (LLM)"]
 
     style A fill:#f0f0f0,stroke:#333
     style C fill:#e6f3ff,stroke:#336
@@ -81,13 +81,13 @@ flowchart LR
     classify -->|"Specific/Local"| LS["Local Search"]
     classify -->|"Exploratory"| DS["DRIFT Search"]
 
-    GS --> MR["Map-Reduce over\nCommunity Summaries"]
-    LS --> ET["Entity Embedding\nSimilarity + Graph Traversal"]
-    DS --> HY["Start Broad\n→ Narrow Down"]
+    GS --> MR["Map-Reduce over<br/>Community Summaries"]
+    LS --> ET["Entity Embedding<br/>Similarity + Graph Traversal"]
+    DS --> HY["Start Broad<br/>→ Narrow Down"]
 
-    MR --> R1["Synthesized\nGlobal Answer"]
-    ET --> R2["Precise\nLocal Answer"]
-    HY --> R3["Refined\nExploratory Answer"]
+    MR --> R1["Synthesized<br/>Global Answer"]
+    ET --> R2["Precise<br/>Local Answer"]
+    HY --> R3["Refined<br/>Exploratory Answer"]
 
     style GS fill:#ffe6e6,stroke:#633
     style LS fill:#e6f3ff,stroke:#336

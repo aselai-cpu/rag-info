@@ -39,16 +39,16 @@ LightRAG strips GraphRAG down to its essentials. It keeps the knowledge graph co
 ```mermaid
 flowchart TD
     subgraph "GraphRAG Pipeline"
-        A1["Text Unitization"] --> B1["Entity/Relationship\nExtraction"]
+        A1["Text Unitization"] --> B1["Entity/Relationship<br/>Extraction"]
         B1 --> C1["KG Construction"]
-        C1 --> D1["Community Detection\n(Leiden Algorithm)"]
-        D1 --> E1["Community\nSummarization"]
+        C1 --> D1["Community Detection<br/>(Leiden Algorithm)"]
+        D1 --> E1["Community<br/>Summarization"]
     end
 
     subgraph "LightRAG Pipeline"
-        A2["Text Unitization"] --> B2["Entity/Relationship\nExtraction"]
-        B2 --> C2["KG Construction +\nChunk Linking"]
-        C2 --> D2["Keyword Index\nBuilding"]
+        A2["Text Unitization"] --> B2["Entity/Relationship<br/>Extraction"]
+        B2 --> C2["KG Construction +<br/>Chunk Linking"]
+        C2 --> D2["Keyword Index<br/>Building"]
     end
 
     style D1 fill:#ffe6e6,stroke:#633
@@ -69,16 +69,16 @@ LightRAG's central innovation is its **dual-level retrieval** strategy, which ad
 
 ```mermaid
 flowchart LR
-    Q["User Query"] --> KW["Keyword\nExtraction"]
-    KW --> LL["Low-Level\nRetrieval"]
-    KW --> HL["High-Level\nRetrieval"]
+    Q["User Query"] --> KW["Keyword<br/>Extraction"]
+    KW --> LL["Low-Level<br/>Retrieval"]
+    KW --> HL["High-Level<br/>Retrieval"]
 
-    LL --> E["Specific Entities +\nDirect Relationships"]
-    HL --> T["Broader Topics +\nCross-Entity Aggregation"]
+    LL --> E["Specific Entities +<br/>Direct Relationships"]
+    HL --> T["Broader Topics +<br/>Cross-Entity Aggregation"]
 
     E --> M["Merge & Rank"]
     T --> M
-    M --> C["Retrieve Linked\nText Chunks"]
+    M --> C["Retrieve Linked<br/>Text Chunks"]
     C --> LLM["LLM Generation"]
 
     style LL fill:#e6f3ff,stroke:#336
