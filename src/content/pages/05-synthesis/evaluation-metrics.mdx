@@ -79,18 +79,14 @@ The most fundamental retrieval metrics.
 
 **Precision@k** measures what fraction of the top-k retrieved documents are relevant:
 
-```
-Precision@k = (# relevant docs in top-k) / k
-```
+$$\text{Precision@}k = \frac{\text{\# relevant docs in top-}k}{k}$$
 
 **Example:** For query "What causes climate change?", your system retrieves 10 documents. Of those, 7 are actually relevant.
 - Precision@10 = 7/10 = 0.7 (70% of retrieved docs are relevant)
 
 **Recall@k** measures what fraction of all relevant documents were retrieved in the top-k:
 
-```
-Recall@k = (# relevant docs in top-k) / (total # relevant docs)
-```
+$$\text{Recall@}k = \frac{\text{\# relevant docs in top-}k}{\text{total \# relevant docs}}$$
 
 **Example:** There are 15 documents in your corpus that answer the climate change query. Your system retrieves 7 of them in the top-10.
 - Recall@10 = 7/15 = 0.47 (retrieved 47% of relevant docs)
@@ -101,9 +97,7 @@ Recall@k = (# relevant docs in top-k) / (total # relevant docs)
 
 MRR measures: **How soon does the first relevant document appear?**
 
-```
-MRR = average(1 / rank_of_first_relevant_document)
-```
+$$\text{MRR} = \text{average}\left(\frac{1}{\text{rank of first relevant document}}\right)$$
 
 **Example:**
 - Query 1: First relevant doc at rank 1 → reciprocal rank = 1/1 = 1.0
@@ -117,10 +111,9 @@ MRR = average(1 / rank_of_first_relevant_document)
 
 NDCG accounts for both **relevance** and **position**. Unlike binary relevant/not-relevant, it allows graded relevance scores.
 
-```
-DCG@k = Σ (relevance_score_i / log2(i + 1))   for i = 1 to k
-NDCG@k = DCG@k / IDCG@k   (normalized by ideal DCG)
-```
+$$\text{DCG@}k = \sum_{i=1}^{k} \frac{\text{relevance\_score}_i}{\log_2(i + 1)}$$
+
+$$\text{NDCG@}k = \frac{\text{DCG@}k}{\text{IDCG@}k} \quad \text{(normalized by ideal DCG)}$$
 
 **Example:** Top-3 retrieved docs have relevance scores [3, 2, 0] (on a scale of 0-3):
 - DCG@3 = 3/log2(2) + 2/log2(3) + 0/log2(4) = 3.0 + 1.26 + 0 = 4.26
