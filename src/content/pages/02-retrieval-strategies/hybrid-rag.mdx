@@ -10,6 +10,25 @@ next: "03-graph-rag/graphrag"
 tags: ["retrieval", "hybrid", "bm25", "vector-search"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**Hybrid RAG runs sparse (BM25) and dense (vector) retrieval in parallel, then fuses results to get the best of both worlds.**
+
+**Why combine them:**
+- **BM25:** Excellent at exact keyword matches, rare/technical terms
+- **Vector search:** Excellent at semantic similarity, synonyms, paraphrasing
+- **Together:** Complementary strengths cover each other's blind spots
+
+**Fusion methods:** RRF (Reciprocal Rank Fusion) is simple and effective—merges ranked lists without calibrating scores.
+
+**When to use:** When users mix semantic queries ("how does X work?") with keyword searches ("find ISO 27001"). Default choice for production.
+
+**Trade-off:** Minimal—just runs two retrievers instead of one. The upside usually justifies the cost.
+
+</SummaryBox>
+
 ## Hybrid RAG
 
 The retrieval strategies we have explored so far all operate in dense vector space. They improve *how* embeddings are compared, but they share a common blind spot: dense retrieval can miss documents that contain exact keywords the user specified. Hybrid RAG addresses this by running two retrieval systems in parallel -- sparse keyword search and dense vector search -- and fusing their results.

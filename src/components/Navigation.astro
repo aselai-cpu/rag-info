@@ -10,11 +10,11 @@ const { currentSlug, currentSection } = Astro.props;
 const allPages = await getCollection('pages');
 
 const sections = [
-  { id: 'foundation', label: 'Foundation', dir: '01-foundation' },
-  { id: 'retrieval-strategies', label: 'Retrieval Strategies', dir: '02-retrieval-strategies' },
-  { id: 'graph-rag', label: 'Graph-Based RAG', dir: '03-graph-rag' },
-  { id: 'rag-ontology', label: 'RAG Ontology', dir: '04-rag-ontology' },
-  { id: 'synthesis', label: 'Synthesis', dir: '04-synthesis' },
+  { id: 'foundation', label: 'Foundation', icon: '📚', dir: '01-foundation' },
+  { id: 'retrieval-strategies', label: 'Retrieval Strategies', icon: '🔍', dir: '02-retrieval-strategies' },
+  { id: 'graph-rag', label: 'Graph-Based RAG', icon: '🕸️', dir: '03-graph-rag' },
+  { id: 'rag-ontology', label: 'RAG Ontology', icon: '🏛️', dir: '04-rag-ontology' },
+  { id: 'synthesis', label: 'Synthesis', icon: '🎯', dir: '04-synthesis' },
 ];
 
 const groupedPages = sections.map(section => ({
@@ -30,15 +30,23 @@ const groupedPages = sections.map(section => ({
   </div>
   {groupedPages.map(section => (
     <details class="nav-section" open={section.id === currentSection}>
-      <summary class="nav-section-title">{section.label}</summary>
-      {section.pages.map(page => (
-        <a
-          href={`/${page.id.replace(/\.mdx?$/, '')}`}
-          class:list={['nav-link', { active: page.id.replace(/\.mdx?$/, '') === currentSlug }]}
-        >
-          {page.data.title}
-        </a>
-      ))}
+      <summary class="nav-section-title">
+        <span class="nav-section-icon">{section.icon}</span>
+        <span class="nav-section-label">{section.label}</span>
+        <span class="nav-section-count">({section.pages.length})</span>
+      </summary>
+      {section.pages.map(page => {
+        const isActive = page.id.replace(/\.mdx?$/, '') === currentSlug;
+        return (
+          <a
+            href={`/${page.id.replace(/\.mdx?$/, '')}`}
+            class:list={['nav-link', { active: isActive }]}
+          >
+            <span class="nav-link-text">{page.data.title}</span>
+            {isActive && <span class="nav-link-indicator">→</span>}
+          </a>
+        );
+      })}
     </details>
   ))}
 </nav>

@@ -10,6 +10,22 @@ next: "03-graph-rag/lightrag"
 tags: ["graphrag", "knowledge-graph", "community-detection", "entities"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**GraphRAG shifts from chunks to entities: extract entities and relationships → build a knowledge graph → detect communities → summarize each community.**
+
+**Breakthrough:** Can answer both local questions ("What does entity X do?") and global questions ("What are the main themes?") by querying community summaries.
+
+**Key technique:** Hierarchical Leiden community detection groups related entities, creating a semantic map of the entire dataset.
+
+**When to use:** Large corpora, exploratory analysis, when you need global understanding, not just local retrieval.
+
+**Trade-off:** High indexing cost (LLM calls for extraction + summarization), but enables new query types impossible with naive RAG.
+
+</SummaryBox>
+
 ## From Chunks to Entities: A Paradigm Shift
 
 Traditional RAG treats text chunks as the fundamental unit of knowledge. You split documents, embed chunks, and retrieve the most similar ones. This works well for specific, local questions -- but it fails catastrophically when someone asks a question like **"What are the main themes across this entire dataset?"**

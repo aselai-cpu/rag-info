@@ -10,6 +10,22 @@ next: "03-graph-rag/hipporag"
 tags: ["lightrag", "knowledge-graph", "dual-level-retrieval"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**LightRAG keeps GraphRAG's knowledge graph but eliminates expensive community detection and summarization.**
+
+**How it works:** Extract entities → build graph → use dual-level retrieval (entity-level + chunk-level) → deduplicate entities across chunks to maintain relationships.
+
+**Key innovation:** Entity deduplication solves context loss without preprocessing overhead. Same "Einstein" in different chunks = single graph node.
+
+**When to use:** When you want graph benefits (entity relationships, context recovery) without GraphRAG's cost (~610K tokens/query for global search).
+
+**Trade-off:** No global queries, but much cheaper and faster for local/hybrid queries while maintaining structural awareness.
+
+</SummaryBox>
+
 ## The Cost Problem with GraphRAG
 
 GraphRAG is powerful, but its Global Search mode consumes approximately **610,000 tokens per query** on moderately-sized corpora. This is because it must process hundreds of community summaries through a map-reduce pipeline before synthesizing a final answer. For many production use cases, this cost is prohibitive.
@@ -44,7 +60,7 @@ The key differences:
 
 1. **No community detection** -- the graph is used directly, without partitioning into communities.
 2. **No community summarization** -- eliminates the expensive LLM calls that generate summaries for each community at each hierarchical level.
-3. **Keyword-based retrieval** -- instead of embedding-based search over summaries, LightRAG extracts keywords from queries and matches them against entities and relationships in the graph.
+3. **Hybrid keyword + embedding retrieval** -- LightRAG extracts keywords from queries and matches them against entities and relationships using both lexical matching and embedding similarity (for synonym handling).
 4. **Chunk linking** -- each entity and relationship in the graph maintains links back to the original text chunks, enabling direct source retrieval.
 
 ## Dual-Level Retrieval

@@ -14,8 +14,21 @@ import CrossReference from '../../../components/CrossReference.astro';
 import PathNotTaken from '../../../components/PathNotTaken.astro';
 import DiagramBlock from '../../../components/DiagramBlock.astro';
 import ComparisonTable from '../../../components/ComparisonTable.astro';
+import SummaryBox from '../../../components/SummaryBox.astro';
 
 # Naive RAG
+
+<SummaryBox>
+
+**Naive RAG is the baseline: chunk documents → embed chunks → store in vector DB → retrieve top-k similar chunks for each query → generate answer.**
+
+**Why learn it:** Every advanced RAG technique exists because something in this pipeline fails. Understanding the failures drives all improvements.
+
+**Common failures:** Questions look different from documents (symmetry problem), chunks lose context, exact keyword matches get missed, entity relationships are invisible.
+
+**When it works:** Simple Q&A over well-structured docs where semantic similarity is enough.
+
+</SummaryBox>
 
 ## The Simplest Thing That Could Work
 

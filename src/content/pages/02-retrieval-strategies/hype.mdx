@@ -10,6 +10,22 @@ next: "02-retrieval-strategies/asymmetric-embeddings"
 tags: ["embeddings", "retrieval", "hype", "symmetry"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**HyPE is the mirror of HyDE: generate hypothetical questions for each document at index time → embed the questions → at query time, compare question-to-question (symmetric).**
+
+**Key difference from HyDE:** Moves LLM cost from query time (expensive per-query) to index time (one-time cost). Zero query latency overhead.
+
+**How it works:** For each chunk, LLM generates 3-5 questions it could answer → questions are embedded and stored alongside the chunk.
+
+**When to use:** When query latency is critical and indexing cost is acceptable. Ideal for static corpora that don't update frequently.
+
+**Trade-off:** Higher indexing cost and storage (multiple embeddings per chunk), but faster queries than HyDE.
+
+</SummaryBox>
+
 ## HyPE: Hypothetical Prompt Embeddings
 
 HyPE is the mirror image of HyDE. Where HyDE transforms queries into hypothetical answers at query time, HyPE transforms documents into hypothetical questions at index time. The result is the same -- symmetric comparison -- but the work shifts from the query path to the indexing path, which has profound implications for latency and cost.

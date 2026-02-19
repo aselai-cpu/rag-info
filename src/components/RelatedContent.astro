@@ -1,0 +1,52 @@
+---
+interface Props {
+  nextPage?: {
+    href: string;
+    title: string;
+    description: string;
+  };
+  prevPage?: {
+    href: string;
+    title: string;
+    description: string;
+  };
+  relatedPages?: Array<{
+    href: string;
+    title: string;
+    description: string;
+  }>;
+}
+
+const { nextPage, prevPage, relatedPages } = Astro.props;
+---
+
+{(nextPage || prevPage || (relatedPages && relatedPages.length > 0)) && (
+  <aside class="related-content">
+    <h3>Continue Learning</h3>
+    <div class="related-cards">
+      {nextPage && (
+        <a href={nextPage.href} class="related-card related-card-next">
+          <span class="card-label">Next →</span>
+          <strong class="card-title">{nextPage.title}</strong>
+          <p class="card-description">{nextPage.description}</p>
+        </a>
+      )}
+
+      {prevPage && (
+        <a href={prevPage.href} class="related-card related-card-prev">
+          <span class="card-label">← Previous</span>
+          <strong class="card-title">{prevPage.title}</strong>
+          <p class="card-description">{prevPage.description}</p>
+        </a>
+      )}
+
+      {relatedPages && relatedPages.map(page => (
+        <a href={page.href} class="related-card related-card-related">
+          <span class="card-label">Related</span>
+          <strong class="card-title">{page.title}</strong>
+          <p class="card-description">{page.description}</p>
+        </a>
+      ))}
+    </div>
+  </aside>
+)}

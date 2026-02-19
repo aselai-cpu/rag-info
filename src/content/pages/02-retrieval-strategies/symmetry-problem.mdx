@@ -10,6 +10,23 @@ next: "02-retrieval-strategies/hyde"
 tags: ["embeddings", "retrieval", "symmetry"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**The Symmetry Problem: queries and documents are structurally different (short/interrogative vs. long/expository), so they form separate clusters in embedding space, causing retrieval to miss relevant documents.**
+
+**Root cause:** Standard embedding models are trained symmetrically (text-to-text), but RAG is asymmetric (question-to-answer).
+
+**Solutions:**
+- **HyDE:** Transform queries into hypothetical answers before searching
+- **HyPE:** Generate multiple hypothetical passages
+- **Asymmetric embeddings:** Use different encoders for queries vs. documents
+
+**Why it matters:** This is the single biggest cause of retrieval failure in naive RAG.
+
+</SummaryBox>
+
 ## The Symmetry Problem
 
 At the heart of naive RAG lies a deceptively simple assumption: if a query and a document are about the same topic, their embeddings should be close together in vector space. In practice, this assumption breaks down in a fundamental way. Queries and documents are structurally different kinds of text, and that structural difference pushes them into different regions of embedding space -- even when they share the same semantic meaning.

@@ -13,8 +13,21 @@ tags: ["rag", "llm", "knowledge", "grounding"]
 import CrossReference from '../../../components/CrossReference.astro';
 import PathNotTaken from '../../../components/PathNotTaken.astro';
 import DiagramBlock from '../../../components/DiagramBlock.astro';
+import SummaryBox from '../../../components/SummaryBox.astro';
 
 # Why RAG?
+
+<SummaryBox>
+
+**RAG (Retrieval-Augmented Generation) solves the core problem that LLMs can't access knowledge beyond their training data.**
+
+**The pattern:** Retrieve relevant documents → Augment the prompt with them → Generate an answer grounded in those documents.
+
+**Why it matters:** Knowledge stays fresh (update the index, not the model), answers are verifiable (linked to sources), and hallucinations become detectable (if retrieval fails, we know why).
+
+**When to use:** Anytime you need LLMs to answer questions using specific, up-to-date, verifiable information.
+
+</SummaryBox>
 
 ## The Core Problem: LLMs and Knowledge
 

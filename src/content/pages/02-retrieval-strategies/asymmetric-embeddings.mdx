@@ -10,6 +10,23 @@ next: "02-retrieval-strategies/hybrid-rag"
 tags: ["embeddings", "retrieval", "asymmetric", "symmetry"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**Asymmetric embeddings solve the symmetry problem by training the model to expect that queries and documents are structurally different, then map them into a shared space anyway.**
+
+**Three approaches:**
+1. **Dual encoders:** Separate query and document encoders
+2. **Instruction-tuned models:** Prefix-based task specification (e.g., "Represent this query...")
+3. **Rerankers:** Two-stage retrieval (fast retrieval → slow precise reranking)
+
+**When to use:** When you want a model-level solution without query-time LLM calls. Modern embedding models (e.g., `bge`, `gte`) have this built-in.
+
+**Trade-off:** Requires using specialized models or fine-tuning. Can't be retrofitted onto arbitrary embedding models.
+
+</SummaryBox>
+
 ## Asymmetric Embeddings
 
 HyDE and HyPE solve the symmetry problem by transforming one side of the comparison to match the other. Asymmetric embeddings take a fundamentally different approach: instead of changing the inputs, they change the embedding model itself. The model is designed (or fine-tuned) to *expect* that queries and documents are structurally different and to map them into a shared space despite that difference.

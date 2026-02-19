@@ -1,0 +1,21 @@
+---
+interface Props {
+  type?: 'summary' | 'tldr' | 'key-takeaway';
+}
+
+const { type = 'summary' } = Astro.props;
+
+const labels = {
+  summary: 'TL;DR',
+  tldr: 'TL;DR',
+  'key-takeaway': 'Key Takeaway'
+};
+
+const label = labels[type];
+---
+<aside class={`summary-box summary-box--${type}`}>
+  <div class="summary-box-title">{label}</div>
+  <div class="summary-box-content">
+    <slot />
+  </div>
+</aside>

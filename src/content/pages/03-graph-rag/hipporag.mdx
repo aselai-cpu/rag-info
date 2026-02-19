@@ -10,6 +10,22 @@ next: "04-rag-ontology/ontology"
 tags: ["hipporag", "knowledge-graph", "ppr", "memory", "multi-hop", "pagerank", "graph-traversal"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**HippoRAG mimics hippocampal memory: build a knowledge graph (pattern separation) → use Personalized PageRank to recover full context from query cues (pattern completion).**
+
+**Key insight:** Like the brain, it creates shared indices (entity nodes) that bridge related memories (passages), enabling associative multi-hop retrieval.
+
+**How PPR works:** Start from query entities → spread activation through the graph → nodes reachable via multiple short paths score highest → retrieve their linked passages.
+
+**When to use:** Multi-hop questions, associative reasoning, when context is fragmented across documents.
+
+**Trade-off:** Higher indexing cost (entity extraction + graph construction) but powerful retrieval.
+
+</SummaryBox>
+
 ## Learning from the Brain
 
 The human hippocampus does something remarkable: given a partial cue, it can retrieve complete memories by activating associated neural pathways. If you hear a few notes of a song, the hippocampus helps you reconstruct the full melody, the context where you heard it, and even how you felt at the time.
@@ -145,20 +161,20 @@ flowchart TD
 ```
 
 At each iteration:
-1. Each node distributes a fraction (1 - alpha) of its current score to its neighbors along outgoing edges.
-2. Each node receives a "teleport" bonus of alpha times its seed weight (alpha is the damping factor, typically ~0.85).
+1. With probability **alpha** (the damping factor, typically 0.85), the surfer follows a random outgoing link from the current node, distributing its current score to neighbors.
+2. With probability **(1 - alpha)** (typically 0.15), the surfer teleports back to a seed node, receiving a restart bonus proportional to its seed weight.
 3. Scores are renormalized.
 
 After convergence, nodes close to the seeds through strong, well-connected paths have high scores. Distant or weakly connected nodes have low scores.
 
 ## The Damping Factor (Alpha)
 
-The damping factor alpha controls the balance between **staying close to the seeds** and **exploring the broader graph**.
+The damping factor alpha controls the balance between **exploring the broader graph** and **staying close to the seeds**.
 
-- **High alpha (e.g., 0.85-0.95)**: The surfer teleports back to seeds frequently. Scores are concentrated near the seed neighborhood. Good for precise, local retrieval.
-- **Low alpha (e.g., 0.5-0.7)**: The surfer explores further before teleporting. Scores spread more broadly. Good for discovering distant but relevant connections.
+- **High alpha (e.g., 0.85-0.95)**: The surfer rarely teleports back to seeds (only 5-15% of the time), so activation spreads widely through the graph. Good for discovering distant but relevant connections through multi-hop reasoning.
+- **Low alpha (e.g., 0.5-0.7)**: The surfer frequently teleports back to seeds (30-50% of the time), keeping scores concentrated near the seed neighborhood. Good for precise, local retrieval.
 
-For RAG applications, alpha values between 0.8 and 0.9 typically work well, balancing precision with the ability to reach multi-hop connections.
+For RAG applications, alpha values between 0.8 and 0.9 typically work well, allowing some exploration while maintaining connection to the query seeds.
 
 ## Worked Example: Multi-Hop Retrieval
 

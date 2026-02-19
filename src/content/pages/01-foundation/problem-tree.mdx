@@ -14,8 +14,23 @@ import CrossReference from '../../../components/CrossReference.astro';
 import PathNotTaken from '../../../components/PathNotTaken.astro';
 import DiagramBlock from '../../../components/DiagramBlock.astro';
 import ComparisonTable from '../../../components/ComparisonTable.astro';
+import SummaryBox from '../../../components/SummaryBox.astro';
 
 # The Problem Tree
+
+<SummaryBox>
+
+**The Problem Tree maps how Naive RAG fails and which techniques solve each failure mode.**
+
+**Four main branches:**
+- **Query-Document Mismatch** → HyDE, HyPE, Asymmetric Embeddings
+- **Structural Blindness** → GraphRAG, Ontologies, LightRAG, HippoRAG
+- **Keyword Blindness** → Hybrid RAG (sparse + dense)
+- **Context Loss** → LightRAG (deduplication), HippoRAG (memory + PPR)
+
+**How to use this:** Start with your failure mode, follow the branch to find relevant solutions.
+
+</SummaryBox>
 
 ## Why a Tree?
 

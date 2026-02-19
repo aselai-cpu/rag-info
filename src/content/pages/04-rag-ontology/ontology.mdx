@@ -10,6 +10,20 @@ next: "04-rag-ontology/competency-questions"
 tags: ["ontology", "endurants", "perdurants", "knowledge-graph"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**Formal ontology distinguishes two fundamental categories: endurants (things that persist, like people or documents) and perdurants (things that unfold over time, like processes or events).**
+
+**Why this matters for RAG:** Most knowledge graphs only capture endurants (entities), losing temporal and processual information. Understanding this distinction helps you model richer graphs.
+
+**Key insight:** An "embedding" is an endurant (an object), but "embedding a document" is a perdurant (a process). GraphRAG typically extracts only endurants.
+
+**When to care:** When your domain involves processes, events, or temporal sequences—not just static entities and relationships.
+
+</SummaryBox>
+
 ## The Two Kinds of Things in the World
 
 When we build knowledge graphs, we make implicit ontological commitments about what exists and how it is categorized. The most fundamental distinction in formal ontology divides everything into two categories: **endurants** (things that persist wholly at any moment in time) and **perdurants** (things that unfold over time, having temporal parts).

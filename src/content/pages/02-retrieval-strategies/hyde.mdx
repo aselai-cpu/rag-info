@@ -10,6 +10,20 @@ next: "02-retrieval-strategies/hype"
 tags: ["embeddings", "retrieval", "hyde", "symmetry"]
 ---
 
+import SummaryBox from '../../../components/SummaryBox.astro';
+
+<SummaryBox>
+
+**HyDE converts questions into hypothetical answers before searching, making retrieval symmetric (answer-to-answer instead of question-to-answer).**
+
+**How it works:** LLM generates a plausible answer → embed it → search for similar documents. Factual correctness doesn't matter—only structural similarity.
+
+**When to use:** When queries are linguistically different from your corpus (questions vs. statements, formal vs. informal).
+
+**Trade-off:** Adds LLM latency to every query (~500ms-2s). Worth it when retrieval quality matters more than speed.
+
+</SummaryBox>
+
 ## HyDE: Hypothetical Document Embeddings
 
 HyDE is a query-time transformation that resolves the symmetry problem by converting a user's question into a hypothetical answer *before* embedding it. Instead of comparing a question embedding against document embeddings (asymmetric), you compare an answer embedding against document embeddings (symmetric). The insight is elegant: even a fabricated answer is structurally closer to real documents than a question ever could be.

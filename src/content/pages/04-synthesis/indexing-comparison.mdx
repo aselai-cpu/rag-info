@@ -13,8 +13,25 @@ tags: ["indexing", "comparison", "vector", "graph", "hybrid"]
 import CrossReference from '../../../components/CrossReference.astro';
 import DiagramBlock from '../../../components/DiagramBlock.astro';
 import ComparisonTable from '../../../components/ComparisonTable.astro';
+import SummaryBox from '../../../components/SummaryBox.astro';
 
 # Indexing Comparison
+
+<SummaryBox>
+
+**This page compares what each RAG approach indexes, the cost of indexing, and what retrieval capabilities that unlocks.**
+
+**Key insight:** More expensive indexing (entity extraction, graph construction) buys more powerful retrieval (multi-hop, associative).
+
+**What to compare:**
+- **Index structure:** Vectors only vs. vectors + graph vs. graph only
+- **Indexing cost:** LLM calls, compute time, storage
+- **Retrieval capabilities:** What queries each approach can answer
+- **Maintenance:** How hard is it to update the index?
+
+**Use this page to:** Understand the indexing cost vs. retrieval power trade-off for each technique.
+
+</SummaryBox>
 
 ## What Gets Indexed Matters
 

@@ -14,8 +14,25 @@ import CrossReference from '../../../components/CrossReference.astro';
 import DiagramBlock from '../../../components/DiagramBlock.astro';
 import ComparisonTable from '../../../components/ComparisonTable.astro';
 import PathNotTaken from '../../../components/PathNotTaken.astro';
+import SummaryBox from '../../../components/SummaryBox.astro';
 
 # Decision Guide
+
+<SummaryBox>
+
+**This guide helps you choose the right RAG approach based on your specific requirements, not what's trendy.**
+
+**Start here:**
+1. What are your query patterns? (single-hop vs. multi-hop)
+2. What's your latency budget? (real-time vs. batch)
+3. What's your indexing budget? (cheap vs. expensive preprocessing)
+4. What are your failure modes? (symmetry, context loss, keyword blindness)
+
+**Decision framework:** Use the decision tree and comparison tables to match your constraints to the right technique.
+
+**Remember:** Start simple (Naive + Hybrid), measure failures, add complexity only where needed.
+
+</SummaryBox>
 
 ## Choosing Your RAG Architecture
 

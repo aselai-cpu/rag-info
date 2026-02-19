@@ -13,8 +13,25 @@ tags: ["overview", "progressive", "map", "synthesis"]
 import CrossReference from '../../../components/CrossReference.astro';
 import DiagramBlock from '../../../components/DiagramBlock.astro';
 import ComparisonTable from '../../../components/ComparisonTable.astro';
+import SummaryBox from '../../../components/SummaryBox.astro';
 
 # The Progressive Map
+
+<SummaryBox>
+
+**The Progressive Map shows how RAG techniques build incrementally from simple to complex, each adding capabilities to solve specific failures.**
+
+**The layers:**
+- **Layer 0:** Naive RAG (baseline)
+- **Layer 1:** Query transformation (HyDE, HyPE) + Hybrid search
+- **Layer 2:** Graph-based indexing (GraphRAG, LightRAG)
+- **Layer 3:** Advanced graph retrieval (HippoRAG + PPR)
+
+**Key insight:** You don't need the most complex approach. Start simple, add complexity only where naive RAG fails for your use case.
+
+**Use this page to:** Understand the progression and see where each technique fits in the overall landscape.
+
+</SummaryBox>
 
 ## From Simple to Complex
 
@@ -47,8 +64,8 @@ flowchart LR
 
 | Technique | Adds to Baseline | Cost |
 |-----------|-----------------|------|
-| <CrossReference slug="02-retrieval-strategies/hyde" /> | 1 extra LLM call per query | Higher latency, potential hallucination in hypothesis |
-| <CrossReference slug="02-retrieval-strategies/hype" /> | N extra LLM calls per query | Higher latency, more diverse coverage |
+| <CrossReference slug="02-retrieval-strategies/hyde" /> | 1 extra LLM call per query | Higher query latency, potential hallucination in hypothesis |
+| <CrossReference slug="02-retrieval-strategies/hype" /> | N LLM calls per chunk (index time only) | Higher indexing cost, zero query latency overhead |
 
 ## Layer 2: Fixing the Embedding Space
 

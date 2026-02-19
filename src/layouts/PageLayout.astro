@@ -3,6 +3,7 @@ import Layout from '../components/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import PrerequisiteBar from '../components/PrerequisiteBar.astro';
 import ProgressTracker from '../components/ProgressTracker.astro';
+import RelatedContent from '../components/RelatedContent.astro';
 import { getCollection } from 'astro:content';
 
 interface Props {
@@ -69,32 +70,23 @@ const relatedPageData = relatedPages
       <h1>{title}</h1>
       <slot />
 
-      {relatedPageData.length > 0 && (
-        <aside style="margin-top: 2rem; padding: 1rem; background: var(--color-primary-light); border-radius: 6px;">
-          <strong>Related Topics:</strong>
-          {relatedPageData.map((p, i) => (
-            <>
-              <a href={`/${stripExt(p.id)}`}>{p.data.title}</a>
-              {i < relatedPageData.length - 1 && ' · '}
-            </>
-          ))}
-        </aside>
-      )}
-
-      <nav class="page-nav">
-        {prevPage ? (
-          <a href={`/${stripExt(prevPage.id)}`}>
-            <span class="page-nav-label">← Previous</span>
-            <span>{prevPage.data.title}</span>
-          </a>
-        ) : <span />}
-        {nextPage ? (
-          <a href={`/${stripExt(nextPage.id)}`} class="page-nav-next">
-            <span class="page-nav-label">Next →</span>
-            <span>{nextPage.data.title}</span>
-          </a>
-        ) : <span />}
-      </nav>
+      <RelatedContent
+        nextPage={nextPage ? {
+          href: `/${stripExt(nextPage.id)}`,
+          title: nextPage.data.title,
+          description: nextPage.data.description
+        } : undefined}
+        prevPage={prevPage ? {
+          href: `/${stripExt(prevPage.id)}`,
+          title: prevPage.data.title,
+          description: prevPage.data.description
+        } : undefined}
+        relatedPages={relatedPageData.map(p => ({
+          href: `/${stripExt(p.id)}`,
+          title: p.data.title,
+          description: p.data.description
+        }))}
+      />
     </main>
   </div>
 </Layout>
