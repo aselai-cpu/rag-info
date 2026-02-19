@@ -24,6 +24,14 @@ import SummaryBox from '../../../components/SummaryBox.astro';
 
 </SummaryBox>
 
+## Why Formal Ontology After Practical Graphs?
+
+You have now seen three graph-based RAG systems (<CrossReference slug="03-graph-rag/graphrag" />, <CrossReference slug="03-graph-rag/lightrag" />, and <CrossReference slug="03-graph-rag/hipporag" />). Each builds a knowledge graph by extracting entities and relationships from text using LLMs. But none of them asks a crucial question: **what kinds of things should be in the graph?**
+
+They extract whatever the LLM identifies as "entities" — but this implicit, ad-hoc ontology has systematic blind spots. For instance, all three systems extract **nouns** (people, places, documents) but systematically ignore **processes** (indexing, retrieval, embedding generation). The distinction between things that persist (like a document) and things that unfold over time (like a retrieval operation) is never explicitly modeled.
+
+This section examines those blind spots through the lens of formal ontology. By understanding **what categories of entities exist** and **how they differ ontologically**, we can build knowledge graphs that capture not just entities and static relationships, but also temporal processes, dependencies, and change over time.
+
 ## The Two Kinds of Things in the World
 
 When we build knowledge graphs, we make implicit ontological commitments about what exists and how it is categorized. The most fundamental distinction in formal ontology divides everything into two categories: **endurants** (things that persist wholly at any moment in time) and **perdurants** (things that unfold over time, having temporal parts).
